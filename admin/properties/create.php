@@ -32,6 +32,9 @@
         $sellerId = mysqli_real_escape_string($db, $_POST['seller']);
         $create = date('Y/m/d');
 
+        // ? asignar files a una variable
+        $image = $_FILES['image'];
+
         if(!$title) {
             $errors[] = "Debes añadir un titulo";
         }
@@ -60,11 +63,38 @@
             $errors[] = "Elige un vendedor";
         }
 
+        if(!$image['name'] || $image['error']) {
+            $errors[] = "La imagen es obligatoria";
+        }
+
+        // ? Validar por tamaño la imagen (1mb max), php solo por defecto solo deja subir archivos de max 2gb
+        $medida = 1000 * 1000;
+
+        if($image['size'] > $medida) {
+            $errors[] = "La imagen es muy pesada";
+        }
+
+
         // * Revisar que el arreglo de errores este vacio
         if(empty($errors)) {
+
+            // ? SUBIDA DE ARCHIVOS
+
+            // * Crear Carpeta y validar si ya existe
+            $folderImages = '../../images/';
+            if(!is_dir($folderImages)) {
+                mkdir($folderImages);
+            }
+
+            // * Generar un nombre único
+            $imageName = md5(uniqid(rand(), true)) . ".jpg";
+            
+            // * move_uploaded_file --> Subir los archivos recibe 3 parametros, donde esta la imagen, donde se va guardar y el nombre del archivo
+            move_uploaded_file($image['tmp_name'], $folderImages . $imageName);
+
             // ? Insertar en la base de datos
-            $query = "INSERT INTO properties (title, price, description, rooms, wc, parking, creating, idSeller)
-            VALUES ('$title','$price','$description','$rooms','$wc','$parking','$create','$sellerId')";
+            $query = "INSERT INTO properties (title, price,image,description, rooms, wc, parking, creating, idSeller)
+            VALUES ('$title','$price','$imageName','$description','$rooms','$wc','$parking','$create','$sellerId')";
 
             $result = mysqli_query($db, $query);
 
@@ -90,7 +120,8 @@
             </div>
         <?php endforeach ?>
 
-        <form class="form" method="POST" action="/admin/properties/create.php">
+        <!-- enctype="multipart/form-data" --- permite leer los archivos que se suban al formulario -->
+        <form class="form" method="POST" action="/admin/properties/create.php" enctype="multipart/form-data">
             <fieldset>
                 <legend>Información General</legend>
 
@@ -101,7 +132,7 @@
                 <input value="<?php echo $price; ?>" name="price" type="number" id="price" placeholder="Precio Propiedad">
             
                 <label for="image">Imagen</label>
-                <input type="file" id="file" accept="image/jpeg, image/png">
+                <input name="image" type="file" id="file" accept="image/jpeg, image/png">
 
                 <label for="description">Descripción</label>
                 <textarea name="description" id="description"><?php echo $description; ?></textarea>
