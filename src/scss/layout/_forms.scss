@@ -20,6 +20,7 @@
     input:not([type="submit"]), 
     textarea,
     select {
+        outline: none;
         padding: 1rem;
         display: block;
         width: 100%;
@@ -43,5 +44,6 @@
     input[type="radio"] {
         margin: 0;
         width: auto;
+        outline: none;
     }
 }
