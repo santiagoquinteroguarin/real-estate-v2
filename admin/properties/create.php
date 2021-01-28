@@ -110,7 +110,7 @@
 ?>
 
     <main class="container section">
-        <h1>Crear</h1>
+        <h1>Crear Propiedad</h1>
 
         <a href="/admin" class="button green-button">Volver</a>
 

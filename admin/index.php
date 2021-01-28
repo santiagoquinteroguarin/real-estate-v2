@@ -18,8 +18,11 @@
 
     <main class="container section">
         <h1>Administrador de Bienes Raices</h1>
+
         <?php if(intval($resultado) === 1) : ?>
-            <p class="alert successful">Anuncio creado correctamente</p>
+            <p class="alert successful">Anuncio Creado Correctamente</p>
+        <?php elseif(intval($resultado) === 2) : ?>
+            <p class="alert successful">Anuncio Actualizado Correctamente</p>
         <?php endif ?>
 
         <a href="/admin/properties/create.php" class="button green-button">Nueva Propiedad</a>
@@ -43,7 +46,7 @@
                         <td>$ <?php echo $property['price']; ?></td>
                         <td>
                             <a href="#" class="red-button-block">Eliminar</a>
-                            <a href="#" class="yellow-button-block">Actualizar</a>
+                            <a href="admin/properties/update.php?id=<?php echo $property['id']; ?>" class="yellow-button-block">Actualizar</a>
                         </td>
                     </tr>
                 <?php endwhile; ?>
