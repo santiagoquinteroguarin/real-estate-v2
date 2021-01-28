@@ -22,13 +22,14 @@
     // ? Super Globales --> $_POST, $_GET, $_SERVER
     // * Ejecutar el codígo después de que el usuario envia el formulario
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $title = $_POST['title'];
-        $price = $_POST['price'];
-        $description = $_POST['description'];
-        $rooms = $_POST['rooms'];
-        $wc = $_POST['wc'];
-        $parking = $_POST['parking'];
-        $sellerId = $_POST['seller'];
+        // * mysqli_real_escape_string --> evita que ingresen comando sql que pueda afectar la base de datos
+        $title = mysqli_real_escape_string($db, $_POST['title']);
+        $price = mysqli_real_escape_string($db, $_POST['price']);
+        $description = mysqli_real_escape_string($db, $_POST['description']);
+        $rooms = mysqli_real_escape_string($db, $_POST['rooms']);
+        $wc = mysqli_real_escape_string($db, $_POST['wc']);
+        $parking = mysqli_real_escape_string($db, $_POST['parking']);
+        $sellerId = mysqli_real_escape_string($db, $_POST['seller']);
         $create = date('Y/m/d');
 
         if(!$title) {
