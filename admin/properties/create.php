@@ -100,7 +100,7 @@
 
             if($result) {
                 // * redireccionar al usuario
-                header('location: /admin');
+                header('location: /admin?resultado=1');
             }
         }
     }
