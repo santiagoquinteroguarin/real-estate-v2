@@ -4,8 +4,20 @@
 
     $db = connectDB();
 
+    // * Consultar para obtener los vendedores
+    $querySeller = "SELECT * FROM seller";
+    $response = mysqli_query($db, $querySeller);
+
     // * Array con mensajes de errores
     $errors = [];
+
+    $title = '';
+    $price = '';
+    $description = '';
+    $rooms = '';
+    $wc = '';
+    $parking = '';
+    $sellerId = '';
 
     // ? Super Globales --> $_POST, $_GET, $_SERVER
     // * Ejecutar el codígo después de que el usuario envia el formulario
@@ -17,6 +29,7 @@
         $wc = $_POST['wc'];
         $parking = $_POST['parking'];
         $sellerId = $_POST['seller'];
+        $create = date('Y/m/d');
 
         if(!$title) {
             $errors[] = "Debes añadir un titulo";
@@ -49,13 +62,14 @@
         // * Revisar que el arreglo de errores este vacio
         if(empty($errors)) {
             // ? Insertar en la base de datos
-            $query = "INSERT INTO properties (title, price, description, rooms, wc, parking, idSeller)
-            VALUES ('$title','$price','$description','$rooms','$wc','$parking','$sellerId')";
+            $query = "INSERT INTO properties (title, price, description, rooms, wc, parking, creating, idSeller)
+            VALUES ('$title','$price','$description','$rooms','$wc','$parking','$create','$sellerId')";
 
             $result = mysqli_query($db, $query);
 
             if($result) {
-                echo 'Insertado Correctamente';
+                // * redireccionar al usuario
+                header('location: /admin');
             }
         }
     }
@@ -80,38 +94,39 @@
                 <legend>Información General</legend>
 
                 <label for="title">Titulo</label>
-                <input name="title" type="text" id="title" placeholder="Titulo Propiedad">
+                <input value="<?php echo $title; ?>" name="title" type="text" id="title" placeholder="Titulo Propiedad">
 
                 <label for="price">Precio</label>
-                <input name="price" type="number" id="price" placeholder="Precio Propiedad">
+                <input value="<?php echo $price; ?>" name="price" type="number" id="price" placeholder="Precio Propiedad">
             
                 <label for="image">Imagen</label>
                 <input type="file" id="file" accept="image/jpeg, image/png">
 
                 <label for="description">Descripción</label>
-                <textarea name="description" id="description"></textarea>
+                <textarea name="description" id="description"><?php echo $description; ?></textarea>
             </fieldset>
 
             <fieldset>
                 <legend>Información Propiedad</legend>
 
                 <label for="rooms">Habitaciones:</label>
-                <input name="rooms" type="number" id="rooms" placeholder="Ej: 3" min="1" max="9">
+                <input value="<?php echo $rooms; ?>" name="rooms" type="number" id="rooms" placeholder="Ej: 3" min="1" max="9">
 
                 <label for="wc">Baños:</label>
-                <input name="wc" type="number" id="wc" placeholder="Ej: 3" min="1" max="9">
+                <input value="<?php echo $wc; ?>" name="wc" type="number" id="wc" placeholder="Ej: 3" min="1" max="9">
 
                 <label for="parking">Estacionamiento:</label>
-                <input name="parking" type="number" id="parking" placeholder="Ej: 3" min="1" max="9">
+                <input value="<?php echo $parking; ?>" name="parking" type="number" id="parking" placeholder="Ej: 3" min="1" max="9">
             </fieldset>
 
             <fieldset>
                 <legend>Vendedor</legend>
 
-                <select name="seller" id="seller">
+                <select name="seller" id="seller" value="<?php echo $sellerId; ?>">
                     <option value="">--Seleccione--</option>
-                    <option value="1">Santiago</option>
-                    <option value="2">Camilo</option>
+                    <?php while($row = mysqli_fetch_assoc($response)) : ?>
+                        <option <?php echo $sellerId === $row['id'] ? 'selected' : ''; ?> value="<?php echo $row['id']; ?>"><?php echo $row['name'] . " " . $row['lastname']; ?></option>
+                    <?php endwhile ?>
                 </select>
             </fieldset>
 
