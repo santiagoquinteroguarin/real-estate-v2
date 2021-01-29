@@ -1,4 +1,11 @@
 <?php 
+    require '../includes/functions.php';
+    $auth = authStatus();
+
+    if(!$auth) {
+        header('Location: /');
+    }
+
     // ? importar la conexión a la DB
     require '../includes/config/database.php';
     $db = connectDB();
@@ -34,7 +41,6 @@
     }
 
     // ? incluye un template
-    require '../includes/functions.php';
     addTemplate('header');
 ?>
 
