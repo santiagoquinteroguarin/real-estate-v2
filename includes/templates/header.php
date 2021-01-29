@@ -1,3 +1,13 @@
+<?php
+    // ? Revisar si ya inicio sesión
+    if(!isset($_SESSION)) {
+        session_start();
+    }
+
+    $auth = $_SESSION['login'] ?? false;
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -25,6 +35,9 @@
                         <a href="/ads.php">Anuncios</a>
                         <a href="/blog.php">Blog</a>
                         <a href="/contact.php">Contacto</a>
+                        <?php if($auth): ?>
+                            <a href="/sign-out.php">Cerrar Sesión</a>
+                        <?php endif; ?>
                     </nav>
                 </div>
             </div>
